@@ -1,0 +1,15 @@
+services:
+  rocket_template:
+    container_name: rocket_template
+    image: rocket_template
+    restart: always
+    env_file:
+      - .env
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: [ "cargo", "run", "--release" ]
+
