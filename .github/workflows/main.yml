@@ -19,6 +19,6 @@ jobs:
     - name: Build
       run: cargo build --verbose
     - name: Run tests
-      run: cargo test --verbose
+      run: JWT_SECRET='changeme' cargo test --verbose
     - name: Run clippy
       run: cargo clippy

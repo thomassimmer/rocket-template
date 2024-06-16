@@ -38,6 +38,7 @@ ROCKET_DATABASES='{rocket_template_db={url="db.sqlite"}}' cargo run
 ### Run tests:
 
 ```bash
+export JWT_SECRET='changeme'
 cargo test
 ```
 
