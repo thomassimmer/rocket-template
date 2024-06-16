@@ -15,6 +15,7 @@ pub mod routes {
 pub mod schema;
 
 pub mod logic {
+    pub mod home;
     pub mod message;
     pub mod user;
 }
@@ -27,6 +28,13 @@ pub mod db {
 
 pub mod utils {
     pub mod common;
+    pub mod jwt;
+}
+
+pub mod structs {
+    pub mod jwt;
+    pub mod request;
+    pub mod response;
 }
 
 use crate::utils::common::cors_fairing;

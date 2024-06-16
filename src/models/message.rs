@@ -20,5 +20,4 @@ pub struct Message {
 #[diesel(table_name = messages)]
 pub struct InputMessage {
     pub content: String,
-    pub author_id: i32, // TODO: This should be set automatically by looking at the request's author.
 }

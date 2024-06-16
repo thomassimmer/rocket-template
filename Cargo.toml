@@ -13,6 +13,7 @@ diesel = { version = "2.2.1", features = [
 ] }
 diesel_migrations = "2.2.0"
 dotenvy = "0.15"
+jsonwebtoken = "9.3.0"
 rocket = { version = "0.5.1", features = ["json"] }
 rocket_cors = "0.6.0"
 rocket_sync_db_pools = { version = "0.1.0", features = ["diesel_sqlite_pool"] }

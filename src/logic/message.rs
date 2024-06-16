@@ -20,12 +20,16 @@ pub async fn delete_message<'a>(conn: &ConnectionPool, id: i32) -> bool {
     db::message::delete_message(conn, id).await
 }
 
-pub async fn create_message<'a>(conn: &ConnectionPool, new_message: InputMessage) -> Message {
+pub async fn create_message<'a>(
+    conn: &ConnectionPool,
+    new_message: InputMessage,
+    user_id: i32,
+) -> Message {
     let message = Message {
         id: None,
         content: new_message.content,
         creation_date: Utc::now().naive_utc(),
-        author_id: new_message.author_id, // TODO: This should be set automatically by looking at the request's author.
+        author_id: user_id,
     };
 
     db::message::create_message(conn, message).await

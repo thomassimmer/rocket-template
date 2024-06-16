@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod test {
     use crate::utils::TestContext;
-    use rocket_template::{self, json_string};
     use rocket::http::{ContentType, Status};
+    use rocket_template::{self, json_string};
 
     #[rocket::async_test]
     async fn test_all_methods() {
@@ -14,14 +14,17 @@ mod test {
             .post("/users")
             .header(ContentType::JSON)
             .body(json_string!({
+                "user_name": "thomas.simmer",
+                "password": "password",
                 "first_name": "Thomas",
                 "last_name": "Simmer",
             }))
             .dispatch()
             .await;
+        assert_eq!(post_response.status(), Status::Ok);
 
         let post_response_body = post_response.into_string().await.unwrap();
-        
+
         assert!(post_response_body.contains("\"id\":1"));
         assert!(post_response_body.contains("\"first_name\":\"Thomas\""));
         assert!(post_response_body.contains("\"last_name\":\"Simmer\""));
@@ -58,6 +61,8 @@ mod test {
             }))
             .dispatch()
             .await;
+
+        assert_eq!(put_response.status(), Status::Ok);
 
         let put_response_body = put_response.into_string().await.unwrap();
 

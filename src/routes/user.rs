@@ -2,7 +2,7 @@ use rocket::{delete, get, post, put, routes};
 
 use crate::db::common::ConnectionPool;
 use crate::logic;
-use crate::models::user::{InputUser, User};
+use crate::models::user::{InputUserCreation, InputUserUpdate, User};
 use rocket::serde::json::Json;
 
 pub fn get_routes() -> Vec<rocket::Route> {
@@ -41,13 +41,13 @@ pub async fn delete_user(conn: ConnectionPool, id: i32) -> String {
 }
 
 #[post("/", format = "json", data = "<user>")]
-pub async fn create_user(conn: ConnectionPool, user: Json<InputUser>) -> Json<User> {
+pub async fn create_user(conn: ConnectionPool, user: Json<InputUserCreation>) -> Json<User> {
     let user = logic::user::create_user(&conn, user.into_inner()).await;
     Json(user)
 }
 
 #[put("/<id>", format = "json", data = "<user>")]
-pub async fn update_user(conn: ConnectionPool, id: i32, user: Json<InputUser>) -> Json<User> {
+pub async fn update_user(conn: ConnectionPool, id: i32, user: Json<InputUserUpdate>) -> Json<User> {
     let user = logic::user::update_user(&conn, id, user.into_inner()).await;
     Json(user)
 }

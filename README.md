@@ -17,10 +17,7 @@ Implemented:
 - Routes to catch 404 and serve statics
 - Integration tests
 - Sqlite connection pool
-
-Coming soon:
-
-- Authentication
+- Authentication by JWT
 
 ## Usage
 
@@ -63,10 +60,14 @@ cargo test
 │   │   └── user.rs
 │   ├── lib.rs
 │   ├── logic
+│   │   ├── home.rs
 │   │   ├── message.rs
 │   │   └── user.rs
 │   ├── migrations
-│   │   └── 2024-06-15-081703_create_tables
+│   │   ├── 2024-06-15-081703_create_tables
+│   │   │   ├── down.sql
+│   │   │   └── up.sql
+│   │   └── 2024-06-16-172322_add_user_name_and_password_in_users
 │   │       ├── down.sql
 │   │       └── up.sql
 │   ├── models
@@ -79,8 +80,13 @@ cargo test
 │   ├── schema.rs
 │   ├── static
 │   │   └── favicon.ico
+│   ├── structs
+│   │   ├── jwt.rs
+│   │   ├── request.rs
+│   │   └── response.rs
 │   └── utils
-│       └── common.rs
+│       ├── common.rs
+│       └── jwt.rs
 └── tests
     ├── mod.rs
     ├── routes

@@ -1,5 +1,5 @@
 use crate::db::common::ConnectionPool;
-use crate::models::user::{InputUser, User};
+use crate::models::user::{InputUserUpdate, User};
 use crate::schema::users;
 use diesel;
 use diesel::prelude::*;
@@ -37,6 +37,21 @@ pub async fn get_user(conn: &ConnectionPool, user_id: i32) -> User {
     .await
 }
 
+pub async fn get_user_by_user_name_and_password(
+    conn: &ConnectionPool,
+    user_name: String,
+    password: String,
+) -> Result<User, diesel::result::Error> {
+    conn.run(move |c| {
+        users::table
+            .filter(users::user_name.eq(user_name))
+            .filter(users::password.eq(password)) // todo: hash
+            .select(User::as_select())
+            .first::<User>(c)
+    })
+    .await
+}
+
 pub async fn create_user(conn: &ConnectionPool, user: User) -> User {
     conn.run(|c| {
         diesel::insert_into(users::table)
@@ -47,7 +62,7 @@ pub async fn create_user(conn: &ConnectionPool, user: User) -> User {
     .await
 }
 
-pub async fn update_user(conn: &ConnectionPool, user_id: i32, user: InputUser) -> User {
+pub async fn update_user(conn: &ConnectionPool, user_id: i32, user: InputUserUpdate) -> User {
     conn.run(move |c| {
         diesel::update(users::table.filter(users::id.eq(user_id)))
             .set(&user)
