@@ -4,26 +4,23 @@ use crate::schema::messages;
 use diesel;
 use diesel::prelude::*;
 
-pub async fn get_messages(conn: &ConnectionPool) -> Vec<Message> {
-    conn.run(move |c| {
-        messages::table
-            .select(Message::as_select())
-            .load::<Message>(c)
-            .expect("Error loading messages")
-    })
-    .await
-}
+pub async fn get_messages(
+    conn: &ConnectionPool,
+    skip: Option<u32>,
+    take: Option<u32>,
+) -> Vec<Message> {
+    let mut query = messages::table.select(Message::as_select()).into_boxed();
 
-pub async fn get_messages_paginated(conn: &ConnectionPool, skip: u32, take: u32) -> Vec<Message> {
-    conn.run(move |c| {
-        messages::table
-            .select(Message::as_select())
-            .limit(take.into())
-            .offset((skip * take).into())
-            .load::<Message>(c)
-            .expect("Error loading messages")
-    })
-    .await
+    if let Some(take) = take {
+        query = query.limit(take as i64);
+    }
+
+    if let Some(skip) = skip {
+        query = query.offset(skip as i64)
+    }
+
+    conn.run(move |c| query.load::<Message>(c).expect("Error loading messages"))
+        .await
 }
 
 pub async fn get_message(conn: &ConnectionPool, message_id: i32) -> Message {

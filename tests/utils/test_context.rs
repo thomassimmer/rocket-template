@@ -20,7 +20,7 @@ impl TestContext {
     pub async fn new() -> Self {
         env::set_var(
             "ROCKET_DATABASES",
-            "{rocket_template_db={url=\":memory:\"}}",
+            "{rocket_template_db={url=\":memory:\",pool_size=1,timeout=5}}",
         );
 
         let client = Client::tracked(rocket())

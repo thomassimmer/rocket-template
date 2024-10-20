@@ -6,14 +6,7 @@ use crate::models::user::{InputUserCreation, InputUserUpdate, User};
 use rocket::serde::json::Json;
 
 pub fn get_routes() -> Vec<rocket::Route> {
-    routes![
-        get_users,
-        get_user,
-        get_users_paginated,
-        delete_user,
-        create_user,
-        update_user
-    ]
+    routes![get_users, get_user, delete_user, create_user, update_user]
 }
 
 #[get("/<id>")]
@@ -22,15 +15,13 @@ pub async fn get_user(conn: ConnectionPool, id: i32) -> Json<User> {
     Json(user)
 }
 
-#[get("/")]
-pub async fn get_users(conn: ConnectionPool) -> Json<Vec<User>> {
-    let userss = logic::user::get_users(&conn).await;
-    Json(userss)
-}
-
 #[get("/?<skip>&<take>")]
-pub async fn get_users_paginated(conn: ConnectionPool, skip: u32, take: u32) -> Json<Vec<User>> {
-    let userss = logic::user::get_users_paginated(&conn, skip, take).await;
+pub async fn get_users(
+    conn: ConnectionPool,
+    skip: Option<u32>,
+    take: Option<u32>,
+) -> Json<Vec<User>> {
+    let userss = logic::user::get_users(&conn, skip, take).await;
     Json(userss)
 }
 

@@ -4,35 +4,27 @@ use crate::schema::users;
 use diesel;
 use diesel::prelude::*;
 
-pub async fn get_users(conn: &ConnectionPool) -> Vec<User> {
-    conn.run(|c| {
-        users::table
-            .select(User::as_select())
-            .load::<User>(c)
-            .expect("Error loading users")
-    })
-    .await
+pub async fn get_users(conn: &ConnectionPool, skip: Option<u32>, take: Option<u32>) -> Vec<User> {
+    let mut query = users::table.select(User::as_select()).into_boxed();
+
+    if let Some(take) = take {
+        query = query.limit(take as i64);
+    }
+
+    if let Some(skip) = skip {
+        query = query.offset(skip as i64)
+    }
+
+    conn.run(move |c| query.load::<User>(c).expect("Error loading users"))
+        .await
 }
 
-pub async fn get_users_paginated(conn: &ConnectionPool, skip: u32, take: u32) -> Vec<User> {
-    conn.run(move |c| {
-        users::table
-            .select(User::as_select())
-            .limit(take.into())
-            .offset((skip * take).into())
-            .load::<User>(c)
-            .expect("Error loading users")
-    })
-    .await
-}
-
-pub async fn get_user(conn: &ConnectionPool, user_id: i32) -> User {
+pub async fn get_user(conn: &ConnectionPool, user_id: i32) -> Result<User, diesel::result::Error> {
     conn.run(move |c| {
         users::table
             .filter(users::id.eq(user_id))
             .select(User::as_select())
             .first::<User>(c)
-            .expect("Error loading User")
     })
     .await
 }

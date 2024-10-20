@@ -3,7 +3,7 @@ mod test {
     use rocket::http::{ContentType, Status};
     use rocket_template::json_string;
 
-    use crate::utils::TestContext;
+    use crate::utils::test_context::TestContext;
 
     #[rocket::async_test]
     async fn hello_world() {

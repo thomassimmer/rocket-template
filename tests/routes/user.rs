@@ -1,8 +1,9 @@
 #[cfg(test)]
 mod test {
-    use crate::utils::TestContext;
     use rocket::http::{ContentType, Status};
     use rocket_template::{self, json_string};
+
+    use crate::utils::test_context::TestContext;
 
     #[rocket::async_test]
     async fn test_all_methods() {
