@@ -18,6 +18,8 @@ Implemented:
 - Integration tests
 - Sqlite connection pool
 - Authentication by JWT
+- Websocket to listen for the creation of new messages
+- Worker to handle the generation of answers to messages
 
 ## Usage
 
@@ -38,18 +40,17 @@ ROCKET_DATABASES='{rocket_template_db={url="db.sqlite"}}' cargo run
 ### Run tests:
 
 ```bash
-export JWT_SECRET='changeme'
-cargo test
+JWT_SECRET='foo' cargo test
 ```
 
 ## Architecture : `tree -I target`
 
 ```
+.
 ├── Cargo.lock
 ├── Cargo.toml
 ├── Dockerfile
 ├── README.md
-├── db.sqlite
 ├── diesel.toml
 ├── docker-compose.yml
 ├── src
@@ -77,17 +78,22 @@ cargo test
 │   ├── routes
 │   │   ├── home.rs
 │   │   ├── message.rs
+│   │   ├── message_channel.rs
 │   │   └── user.rs
 │   ├── schema.rs
 │   ├── static
 │   │   └── favicon.ico
 │   ├── structs
+│   │   ├── app_state.rs
 │   │   ├── jwt.rs
 │   │   ├── request.rs
-│   │   └── response.rs
+│   │   ├── response.rs
+│   │   ├── task.rs
+│   │   └── worker_queue.rs
 │   └── utils
 │       ├── common.rs
-│       └── jwt.rs
+│       ├── jwt.rs
+│       └── worker.rs
 └── tests
     ├── mod.rs
     ├── routes
@@ -95,8 +101,15 @@ cargo test
     │   ├── message.rs
     │   └── user.rs
     └── utils
-        └── mod.rs
+        └── test_context.rs
 ```
+
+## Articles on Medium
+
+I wrote these two articles on Medium about this projet:
+
+- [Rust: Writing Tests in Rocket using an In-Memory DB 🚀](https://medium.com/@thomas.simmer/rust-writing-tests-in-rocket-49dd1733350e)
+- [Rust: Build a Simple Celery-like Worker](https://medium.com/@thomas.simmer/rust-build-a-simple-celery-like-worker-7ae90f170515)
 
 ## Support
 
